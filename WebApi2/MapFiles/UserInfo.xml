@@ -1,0 +1,67 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<sqlMap nameSpace="UserInfo" xmlns="http://ibatis.apache.org/mapping" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <alias>
+    <typeAlias alias="UserInfo" type="WebApi2.EntityModel.UserInfo, WebApi2"/>
+  </alias>
+  <resultMaps>
+    <resultMap id="SelectAllResult" class="UserInfo">
+      <result property="UserID" column="UserID" dbType="int" type="int"/>
+      <result property="UserName" column="UserName" dbType="varchar" type="string"/>
+      <result property="RealName" column="RealName" dbType="varchar" type="string"/>
+      <result property="Age" column="Age" dbType="int" type="byte"/>
+      <result property="Sex" column="Sex" dbType="int" type="byte"/>
+      <result property="Email" column="Email" dbType="varchar" type="string"/>
+      <result property="Mobile" column="Mobile" dbType="varchar" type="string"/>
+      <result property="Phone" column="Phone" dbType="varchar" type="string"/>
+    </resultMap>
+  </resultMaps>
+  <statements>
+    <select id="SelectAllUser" resultMap="SelectAllResult">
+      <![CDATA[
+      select UserID,UserName,RealName,Age,Sex,Email,Mobile,Phone from UserInfo
+      ]]>
+    </select>
+    <select id="SelectByUserId" parameterClass="int" resultMap="SelectAllResult" extends="SelectAllUser">
+      <![CDATA[
+      where UserID = #value#
+      ]]>
+    </select>
+    <select id="SelectUserInfoCount" resultClass="int">
+      <![CDATA[
+      select max(UserID) from UserInfo
+      ]]>
+    </select>
+    <insert id="InserUserInfo" parameterClass="UserInfo">
+      <selectKey property="UserID" type="post" resultClass="int">
+        ${selectKey}
+      </selectKey>
+      <![CDATA[
+      insert into UserInfo
+      (UserName,RealName,Age,Sex,Email,Mobile,Phone)
+      values
+      (#UserName#, #RealName#, #Age#, #Sex#, #Email#, #Mobile#, #Phone#)
+      ]]>
+    </insert>
+    <update id="UpdateUserInfo" parameterClass="UserInfo">
+      <![CDATA[
+      update UserInfo set
+      UserName=#UserName#,
+      RealName=#RealName#,
+      Age=#Age#,
+      Sex=#Sex#,
+      Email=#Email#,
+      Mobile=#Mobile#,
+      Phone=#Phone#
+      where
+      UserID=#UserID#
+      ]]>
+    </update>
+    <delete id="DeleteUserInfo" parameterClass="int">
+      <![CDATA[
+      delete from UserInfo
+      where
+      UserID=#UserID#
+      ]]>
+    </delete>
+  </statements>
+</sqlMap>
